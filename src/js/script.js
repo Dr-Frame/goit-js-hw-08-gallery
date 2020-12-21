@@ -75,7 +75,10 @@ const refs = {
 
 // функция создания разметки галереи
 // через инсерт не делал, чисто изза лекций Саши Репеты, потом будем делать)) (оно изи)
-function addGalleryElements() {
+
+// ================  вариант с созданием пустого массива и push в него  ============
+
+/* function addGalleryElements() {
   let arrOfElements = [];
   let indexNumber = 0;
 
@@ -97,6 +100,32 @@ function addGalleryElements() {
     linkRef.appendChild(imgRef);
     liElementRef.appendChild(linkRef);
     arrOfElements.push(liElementRef);
+  });
+  refs.gallery.append(...arrOfElements);
+} */
+
+// =========== вариант с map ====================
+function addGalleryElements() {
+  let indexNumber = 0;
+
+  const arrOfElements = images.map((image) => {
+    const liElementRef = document.createElement("li");
+    liElementRef.classList.add("gallery__item");
+
+    const linkRef = document.createElement("a");
+    linkRef.classList.add("gallery__link");
+    linkRef.href = image.original;
+
+    const imgRef = document.createElement("img");
+    imgRef.classList.add("gallery__image");
+    imgRef.src = image.preview;
+    imgRef.alt = image.description;
+    imgRef.dataset.value = image.original;
+    imgRef.dataset.index = indexNumber += 1;
+
+    linkRef.appendChild(imgRef);
+    liElementRef.appendChild(linkRef);
+    return liElementRef;
   });
   refs.gallery.append(...arrOfElements);
 }
@@ -124,12 +153,12 @@ function onGalleryClick(event) {
   let activeIndex = Number(event.target.dataset.index);
 
   window.addEventListener("keydown", (event) => {
-    if (event.code === "ArrowRight" && activeIndex < images.length) {
+    if (event.code === "ArrowRight" && activeIndex < images.length - 1) {
       activeIndex += 1;
-      refs.modalImgRef.src = images[activeIndex - 1].original;
+      refs.modalImgRef.src = images[activeIndex].original;
     } else if (event.code === "ArrowLeft" && activeIndex > 0) {
       activeIndex -= 1;
-      refs.modalImgRef.src = images[activeIndex - 1].original;
+      refs.modalImgRef.src = images[activeIndex].original;
     }
   });
 }
